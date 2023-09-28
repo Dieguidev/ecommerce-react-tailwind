@@ -3,20 +3,21 @@ import { useContext } from "react"
 import { ShoppingCartContext } from "../context"
 import { OrderCard } from "./OrderCard"
 import { totalPrice } from "../utils"
+import { Link } from "react-router-dom"
 
 
 export const CheckoutSideMenu = () => {
 
   const context = useContext(ShoppingCartContext)
 
-  const handleDelete =(id)=>{
+  const handleDelete = (id) => {
     const filteredProducts = context.cartProducts.filter(product => product.id !== id)
     context.setCartProducts(filteredProducts)
     context.setCount(context.count - 1)
   }
 
   const handleCheckout = () => {
-    const orderToAdd ={
+    const orderToAdd = {
       date: '01.02.23',
       products: context.cartProducts,
       totalProducts: context.cartProducts.length,
@@ -26,6 +27,7 @@ export const CheckoutSideMenu = () => {
     context.setOrder([...context.order, orderToAdd])
     context.setCartProducts([])
     context.setCount(0)
+    context.closeCheckoutSideMenu()
   }
 
   return (
@@ -38,18 +40,18 @@ export const CheckoutSideMenu = () => {
       </div>
       <div className='px-6 overflow-y-scroll flex-1'>
         {
-        context.cartProducts.map((product) => (
-          <OrderCard
-            title={product.title}
-            price={product.price}
-            imageUrl={product.image1}
-            key={product.id}
-            id={product.id}
-            handleDelete={handleDelete}
-          />
-        )
-        )
-      }
+          context.cartProducts.map((product) => (
+            <OrderCard
+              title={product.title}
+              price={product.price}
+              imageUrl={product.image1}
+              key={product.id}
+              id={product.id}
+              handleDelete={handleDelete}
+            />
+          )
+          )
+        }
       </div>
 
       <div className='px-6 mb-6'>
@@ -57,12 +59,15 @@ export const CheckoutSideMenu = () => {
           <span className='font-light'>Total</span>
           <span className='font-medium text-2xl'>${totalPrice(context.cartProducts)}</span>
         </p>
-        <button
-          className='w-full py-3  text-white bg-black rounded-lg'
-          onClick={() => handleCheckout()}
-        >
-          Checkout
-        </button>
+        <Link to='my-orders/last'>
+          <button
+            className='w-full py-3  text-white bg-black rounded-lg'
+            onClick={() => handleCheckout()}
+          >
+            Checkout
+          </button>
+
+        </Link>
 
       </div>
 
