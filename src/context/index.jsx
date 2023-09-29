@@ -14,19 +14,36 @@ export const ShoppingCartProvider = ({ children }) => {
       .then(data => setItems(data))
   }, [])
 
+  //get products from api by category
+  const [searchByCategory, setSearchByCategory] = useState(null)
+
+  const filterItemsbyCategory = (items, searchByCategory) => {
+    return items.filter(item => item.category.name.toLowerCase().includes(searchByCategory.toLowerCase()))
+  }
+
+
   //get products from api by title
   const [searchByTitle, setSearchByTitle] = useState(null)
-
-  //products filtered
   const [filteredItems, setFilteredItems] = useState(null)
   const filterItemsbyTitle = (items, searchByTitle) => {
     return items.filter(item => item.title.toLowerCase().includes(searchByTitle.toLowerCase()))
   }
 
+  // const filterBy =(searchType, searchValue) =>{
+  //   if (searchType===) {
+
+  //   }
+
+  // }
+
   useEffect(() => {
-    if (searchByTitle) setFilteredItems(filterItemsbyTitle(items, searchByTitle))
+    if (searchByTitle && searchByCategory) setFilteredItems(filterItemsbyTitle(filterItemsbyCategory(items, searchByCategory), searchByTitle))
+    else if (!searchByTitle && searchByCategory) setFilteredItems(filterItemsbyCategory(items, searchByCategory))
+    else if (searchByTitle && !searchByCategory) setFilteredItems(filterItemsbyTitle(items, searchByTitle))
+    // else if (searchByTitle) setFilteredItems(filterItemsbyTitle(items, searchByTitle))
+    // else if (searchByCategory) setFilteredItems(filterItemsbyCategory(items, searchByCategory))
     else setFilteredItems(items)
-  }, [items, searchByTitle])
+  }, [items, searchByTitle, searchByCategory])
 
 
   // Count of products in cart
@@ -82,7 +99,9 @@ export const ShoppingCartProvider = ({ children }) => {
       setItems,
       searchByTitle,
       setSearchByTitle,
-      filteredItems
+      filteredItems,
+      searchByCategory,
+      setSearchByCategory
     }}>
       {children}
     </ShoppingCartContext.Provider>

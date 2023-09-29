@@ -10,7 +10,25 @@ export const Home = () => {
 
   const context = useContext(ShoppingCartContext)
 
-//searchByTitle,setSearchByTitle
+  const renderview = () => {
+    if (context.filteredItems?.length === 0) {
+      return <div>No items found</div>
+    }
+    else {
+      return context.filteredItems?.map((item) => (
+        <Card
+          id={item.id}
+          key={item.id}
+          category={item.category.name}
+          image1={item.images[0]}
+          title={item.title}
+          price={item.price}
+          description={item.description}
+        />
+      ))
+    }
+  }
+
   return (
     <>
       <div className='flex items-center justify-center relative w-80 mb-4'>
@@ -24,17 +42,7 @@ export const Home = () => {
       />
       <div className='grid gap-4 grid-cols-4 w-full max-w-screen-lg'>
         {
-          context.filteredItems?.map((item) => (
-            <Card
-              id={item.id}
-              key={item.id}
-              category={item.category.name}
-              image1={item.images[0]}
-              title={item.title}
-              price={item.price}
-              description={item.description}
-            />
-          ))
+          renderview()
         }
       </div>
       <ProductDetail />
